@@ -1,0 +1,21 @@
+name: Update Calendar Feed
+on:
+  push:
+    paths:
+      - 'sales_entries.csv'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-with: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Script
+        run: python generate_ics.py
+      - name: Commit Change
+        run: |
+          git config --global user.name 'Update Bot'
+          git config --global user.email 'bot@github.com'
+          git add deadlines.ics
+          git commit -m "Update calendar feed" || exit 0
+          git push
